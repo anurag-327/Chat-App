@@ -7,10 +7,11 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import {X} from 'phosphor-react';
 import {FileSearch} from 'phosphor-react';
+import {ArrowLeft} from 'phosphor-react';
 import Loader from "react-js-loader";
 import DrawerContact from './drawercontact';
 import avatar from "../assets/avatar.png" 
-function Navbar()
+function SearchUserBox()
 {
     const {user,selectedChat,setSelectedChat,chat,setChat}=useContext(UserContext);
     const navigate=useNavigate();
@@ -21,10 +22,11 @@ function Navbar()
     const [profile,setProfile]=useState(false)
     async function getuser()
     {
+        const userinfo=JSON.parse(localStorage.getItem("userinfo"));
         setLoading(true);
         let options={
             headers:{
-                "authorization":`Bearer ${user.token}`
+                "authorization":`Bearer ${userinfo.token}`
             }
         }
         const res= await fetch(`http://127.0.0.1:5000/api/user?search=${searchUser}`,options) ;
@@ -67,54 +69,36 @@ function Navbar()
         navigate("/");   
     }
     return(
-    <nav className='flex justify-between relative  bg-pink-300 p-3'>
-        <div className='w-[36%] h-[2rem] flex justify-start ml-12 '>
-        {/* <FileSearch  size={30} color="#414337" weight="duotone" /> */}
-        <button onClick={() => setDrawer(!drawer)} className=' text-start  bg-gray-100 w-[70%] text-black  h-10  px-2 rounded-md  ' >Search or start a new chat</button>
-        </div>
-        <div className='flex gap-2 m-auto justify-center'>
-            <ChatsCircle size={32} weight="thin" />
-            <span className='mt-1 text-lg font-bold text-white'>CHAT APP</span>
-        </div>
-        <div className='w-[40%] flex justify-end relative right-10 gap-8 font-bold'>
-             <img onClick={() => setProfile(!profile)} className=' cursor-pointer w-10 h-10 bg-white rounded-full' src={avatar} alt="profile" />
-            
+    <div className='flex justify-between bg-white'>
+        <div className='  flex flex-col gap-1 justify-center items-center w-full'>
+        <button onClick={() => setDrawer(!drawer)} className=' text-start w-[80%]  bg-gray-200 text-black  h-9  px-2 rounded-md  ' >Search or start a new chat</button>
+        <hr className="h-px w-[90%]  bg-gray-400 border-0 dark:bg-gray-700"/>
         </div>
         {
             drawer&&
-            <div className='absolute top-0 left-0   h-[100vh] bg-white py-2 px-6'>
-                <div className='flex justify-end'>
-                <X onClick={() => setDrawer(!drawer)} className="cursor-pointer" size={36} color="#414337" weight="duotone" />
+            <div className='absolute top-0 left-0    h-[91vh] w-[90%]  md:w-[40%]  lg:w-[30%] xl:w-[30%] bg-white  '>
+                <div className='flex gap-3 justify-start  items-center h-32 bg-gray-900 p-3'>
+                <ArrowLeft onClick={() => setDrawer(!drawer)} className="cursor-pointer" size={30} color="#FFFFFF" weight="duotone" />
+                <span className='text-white text-center font-bold text-2xl'>Search user</span>
                 </div>
                 <div className='w-[100%] gap-2 p-4 h-[2rem] flex justify-center '>
-                    <input onChange={(e)=> setsearchUser(e.target.value)} className='border border-black m-auto outline-none resize-none h-8  px-2 rounded-md w-[80%] bg-gray-100 placeholder:text-gray-500 ' type="text" placeholder='Search user by name/email'/>
-                    <button onClick={getuser} className=' border border-black py-1 px-3 rounded-md h-8 bg-violet-600 text-white '>GO</button>
+                    <input onChange={(e)=> setsearchUser(e.target.value)} className=' m-auto outline-none resize-none h-10  px-2 rounded-md w-[80%] bg-gray-200 placeholder:text-gray-500 ' type="text" placeholder='Search or start new chat'/>
+                    <button onClick={getuser} className=' border border-black py-1 px-3 rounded-md h-10 bg-violet-600 text-white '>GO</button>
                 </div>
                 {
                     loading && <Loader type="spinner-default" bgColor={"#333"}  color={'#FFFFFF'} size={50} />
                 }
-                <div className='mt-10 flex flex-col gap-2 '>
+                <div className='mt-10 overflow-auto no-scrollbar scrollbar-hide flex flex-col gap-2 p-2 '>
                     {
                    contacts&& contacts.map(item => <button onClick={(e)=>openchat(e)} key={item._id} data-id={item._id}><DrawerContact item={item} key={item._id} /></button> )
                     }
-    
                 </div>
             </div>
        }
-       {
-        profile&&
-        <div className='absolute top-16 flex flex-col gap-3    justify-center p-1 right-5 h-auto  bg-gray-100 shadow-md'>
-            <img className='w-[50%] m-auto rounded-full shadow-lg' src={avatar} alt="dp"/>
-            <h2 className='text-center font-bold'>{user.name}</h2>
-            <h2 className='text-center '>{user.email}</h2>
-             <button onClick={handlelogout} className="font-bold rounded-md text-black p-2 bg-red-400 shadow-lg">Log Out</button>
-
-
-        </div>
-       }
        
        
-    </nav>
+       
+    </div>
     )
 }
-export default Navbar
+export default SearchUserBox

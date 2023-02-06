@@ -28,7 +28,29 @@ const io=require("socket.io")(server,{
         origin:"http://localhost:5173"
     }
 });
-io.on("connect",() =>
+io.on("connect",(socket) =>
 {
-    
+  console.log("connected to socket.io")
+  socket.on('setup',(user) =>
+  {
+    console.log(user._id)
+    socket.join(user._id);
+    socket.emit("connected")
+  })
+  socket.on('startchat',(chatId) =>
+  {
+    console.log("user joined room",chatId)
+    socket.join(chatId);
+    socket.emit("connected")
+  })
+  socket.on("sendmessage",(newmessage)=>
+  {
+      console.log(newmessage)
+    var chatId= newmessage.chatId;
+    if(!chatId.users) return console.log("users not defined")
+    chatId.users.forEach(user => {
+        if(user._id === newmessage.sender._id)  return 
+        socket.in(user._id).emit("recievemessage",newmessage)  
+    });
+  })
 })

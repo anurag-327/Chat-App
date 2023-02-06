@@ -15,6 +15,7 @@ router.post("/",VerifyToken,async (req,res) =>
     const chat= await Chat.find({isgroupchat:false,$and:[{users:{$elemMatch:{$eq:sender}}},{users:{$elemMatch:{$eq:reciever}}}]})
     .populate("users","-password")
     .populate({path:"latestmessage",populate:{path:"sender"}});
+    // .populate({path:"latestmessage"});
     if(chat.length>0)
     {
         return res.status(200).json(chat[0])
@@ -33,9 +34,9 @@ router.get("/",VerifyToken,async (req,res) =>
     const sender=req.user.id;
     const chat= await Chat.find({users:{$elemMatch:{$eq:sender}}})
     .populate("users")
-    .populate({path:"latestmessage",populate:{path:"lastmessage.sender"}})
+    .populate({path:"latestmessage",populate:{path:"sender"}})
     .populate("groupadmin","-password")
-    .sort({updatedat:-1});
+    .sort({updatedAt:-1});
     if(chat)
     {
         return res.status(200).json(chat)
@@ -47,6 +48,7 @@ router.get("/:chatId",VerifyToken,async (req,res) =>
     const sender=req.user.id;
     const chat= await Chat.find({_id:req.params.chatId})
     .populate("users")
+    
     // .select("users -id")
     let data;
     if(chat)
@@ -67,4 +69,69 @@ router.get("/:chatId",VerifyToken,async (req,res) =>
     }
     res.status(201).json("get all chats with id");
 })
+router.put("/updatelatestmessage",async (req,res) =>
+{
+    const result=await Chat.findByIdAndUpdate(req.body.chatId,{latestmessage:req.body.message},{new:true});
+    // console.log(result)
+  //  console.log("update latest messge")
+})
+
+router.post("/group",VerifyToken,async(req,res)=>
+{
+    if (!req.body.users || !req.body.name) {
+        return res.status(400).send({ message: "Please Fill all the feilds" });
+      }
+      var users = JSON.parse(req.body.users);
+      if (users.length < 2) {
+        return res
+          .status(400)
+          .send("More than 2 users are required to form a group chat");
+      }
+      users.push(req.user);
+      try {
+        const groupchat = await Chat.create({
+          chatname: req.body.name,
+          users: users,
+          isgroupchat: true,
+          groupadmin: req.user,
+        });
+        const fullGroupChat = await Chat.findOne({ _id: groupchat._id })
+        .populate("users", "-password")
+        .populate("groupadmin", "-password");
+
+        res.status(200).json(fullGroupChat);
+     } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+    
+
+})
+
+router.put("/rename",VerifyToken,async(req,res) =>
+{
+    const { chatId, chatname } = req.body;
+
+    const updatedChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        chatname: chatname,
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("users", "-password")
+      .populate("groupadmin", "-password");
+  
+    if (!updatedChat) {
+      res.status(404);
+      throw new Error("Chat Not Found");
+    } else {
+      res.json(updatedChat);
+    }
+})
+
+// router.put("/groupremove").put(protect, removeFromGroup);
+// router.put("/groupadd").put(protect, addToGroup);
 module.exports=router;

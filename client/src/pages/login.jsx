@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react' 
+import React, { useState,useContext, useEffect } from 'react' 
 import { BugDroid } from 'phosphor-react';
 import {WarningCircle} from 'phosphor-react';
 import {BellRinging} from 'phosphor-react';
@@ -23,10 +23,15 @@ import {UserContext} from "../App"
 function Login()
 {
     const navigate=useNavigate();
-    const {user,setuser} = useContext(UserContext);
+    const {user,setUser} = useContext(UserContext);
     
     if(user)
     navigate("/chat")
+    // useEffect(()=>
+    // {
+    //     if(user)
+    //     navigate("/chat")
+    // },[])
     const [login,setlogin]=useState(true);
     const [error,seterror]=useState(false);
     const [errormsg,seterrormsg]=useState("Good to go");

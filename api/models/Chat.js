@@ -10,5 +10,7 @@ const chatmodel=new mongoose.Schema({
     ],
     latestmessage:{type:mongoose.Schema.Types.ObjectId,ref:"Message"},
     groupadmin:{type:mongoose.Schema.Types.ObjectId,ref:"User"},
+},{
+    timestamps:true
 })
 module.exports=mongoose.model("Chat",chatmodel);

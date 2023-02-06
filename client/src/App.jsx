@@ -22,19 +22,52 @@ export const UserContext = createContext();
 function App() 
 {
   
-  const [user, setuser] = useState();
-  const [selectedchat,setSelectedchat]=useState();
+  const [user, setUser] = useState();
+  const [selectedChat,setSelectedChat]=useState();
   const [chat,setChat]=useState([]); 
+  const [userChat,setUserChat]=useState([]); 
+  const [notification,setNotification]=useState([]);
+  
   useEffect(()=>
     {
         const userinfo=JSON.parse(localStorage.getItem("userinfo"));
-        setuser(userinfo);
+        setUser(userinfo);
     },[])
+
+
+    useEffect( () =>
+    {
+        user&& 
+        (async function()
+        {
+            // console.log(user)
+            // console.log("token")
+            // console.log(user.token)
+            let options={
+                headers:{
+                    "authorization":`Bearer ${user.token}`
+                }
+            }
+            const res= await fetch("http://127.0.0.1:5000/api/chat",options) ;
+            const data= await res.json();
+            if(res.status==200)
+            {
+                // console.log(data);
+                // setcontacts(data)
+                setChat(data);
+                // setloding(false)
+            }
+            
+            // setloding(false)
+        }())
+         
+    },[user,userChat])
+
   return (
 
-    <UserContext.Provider value={{user,setuser,selectedchat,setSelectedchat,chat,setChat}}>
+    <UserContext.Provider value={{user,setUser,selectedChat,setSelectedChat,chat,setChat,userChat,setUserChat,notification,setNotification}}>
      
-      
+
       <RouterProvider router={router} />
       
     </UserContext.Provider>
