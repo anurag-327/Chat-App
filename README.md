@@ -7,12 +7,12 @@
 ### steps to run code  
    - 1-Clone repo on your local machine
    - 2-Start Backend server
-       - a-**cd api
-       - b-**npm i (to install dependencies on your machine)
-       - c-**npm run start
+       - a-**cd api**
+       - b-**npm i (to install dependencies on your machine)**
+       - c-**npm run start**
    - 3-start frontend vite server 
-       - a- **cd client
-       - b- **npm run dev
+       - a- **cd client**
+       - b- **npm run dev**
    - 4-you are good to go
 
 
