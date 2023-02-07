@@ -21,22 +21,22 @@ function Chatbox({socket}) {
   const userinfo=JSON.parse(localStorage.getItem("userinfo"))
   async function handlesendmessage(e) {
     if (e.key === "Enter" && newmessage) {
-      let options = {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({ content: newmessage, chatId: selectedChat }),
-      };
-      const res = await fetch(
-        "http://127.0.0.1:5000/api/message/sendmessage",
-        options
-      );
-      const data = await res.json();
-      if (res.status == 200) 
-      {
+      console.log(newmessage)
+      try{
+        let options = {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({ content: newmessage, chatId: selectedChat }),
+        };
+        const res = await fetch("http://127.0.0.1:5000/api/message/sendmessage", options);
+        const data = await res.json();
+        if (res.status == 200 && data) 
+        {
         socket.emit("sendmessage", data);
+        console.log("sentNewmessage",data)
         setUserChat([...userChat, data]);
         setNewmessage("");
         let options2 = {
@@ -49,8 +49,11 @@ function Chatbox({socket}) {
         };
         const res = await fetch("http://127.0.0.1:5000/api/chat/updatelatestmessage",options2);
         const x= await res.json();
-        
       }
+      }catch (err)
+      {
+         console.log(err)
+      } 
     }
   }
   useEffect(() => {

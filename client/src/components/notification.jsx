@@ -10,8 +10,7 @@ function Notification({item,setOpenNotification})
         // console.log(item.chatId)
         setSelectedChat(item.chatId._id)
         // console.log(notification)
-        setNotification(notification.filter(c => c!== item))
-        
+        setNotification(notification.filter(c => c!== item))  
         setOpenNotification(false)
     }
    

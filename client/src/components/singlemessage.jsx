@@ -4,22 +4,22 @@ import avatargirl from "../assets/avatargirl.png"
 import {UserContext} from "../App"
 function SingleMessage({ item }) {
   const {user,selectedchat,setSelectedchat,chat,setChat} = useContext(UserContext);
-  // console.log("came")
+  // console.log("came",item._id)
   // console.log(user._id,item)
   // for(let i of item)
   // {
   //     console.log(i)
   // }
 //  console.log(typeof(item.createdAt))
-  let inter=item.createdAt
-  let hour=(parseInt(String(inter).slice(11,13))+5)%24;
-  let min=(parseInt(String(inter).slice(14,16))+30);
- if(min>60)
- {
-    min=min%60;
-    hour=(hour+1)%24;
- }
- const time=String(inter).slice(11,16)?String(inter).slice(11,16):("00:00")
+//   let inter=item.createdAt
+//   let hour=(parseInt(String(inter).slice(11,13))+5)%24;
+//   let min=(parseInt(String(inter).slice(14,16))+30);
+//  if(min>60)
+//  {
+//     min=min%60;
+//     hour=(hour+1)%24;
+//  }
+//  const time=String(inter).slice(11,16)?String(inter).slice(11,16):("00:00")
   const [loggeduser,setLoggeduser]=useState();
   
  

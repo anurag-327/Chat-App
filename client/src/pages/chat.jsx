@@ -74,24 +74,16 @@ function Chat()
             selectedChatCompare=selectedChat
           if (selectedChatCompare===undefined || selectedChatCompare !== messagerecieved.chatId._id)
           {
-            // console.log("selected chat",selectedChat)
+            console.log("selected chat",selectedChat)
             
                  displaytoast();
-                 function playSound() {
-                
-                    const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
-                    audio.autoplay="true";
-                    audio.muted="true";
-                    audio.play();
-                    }
-                    playSound();
-            //    console.log("pakad mereko");
+               console.log("pakad mereko");
                setNotification([...notification,messagerecieved])
            } 
-           if(selectedChatCompare === messagerecieved.chatId._id) {
-            //    console.log("pakad liya")
+           else if(selectedChatCompare === messagerecieved.chatId._id && selectedChat!=undefined && selectedChatCompare!=undefined) {
+               console.log("pakad liya")
                setUserChat([...userChat, messagerecieved]);
-            // console.log(messagerecieved);
+            console.log(messagerecieved);
           }
         });
       });
